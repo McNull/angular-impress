@@ -24,7 +24,7 @@
   //////////////////////////////////////////////////////////////////////////
   // HELPER FUNCTIONS
 
-  
+
   // GLOBALS AND DEFAULTS
   // This is where the root elements of all impress.js instances will be kept.
   // Yes, this means you can have more than one instance on a page, but I'm not
@@ -47,6 +47,17 @@
   ////////////////////////////////////////////////////////////////////////////////////
   // IMPRESS.JS API
   var ngImpressApi = angular.module('ngImpress.api', ['ngImpress.utils']);
+
+  ngImpressApi.run(function ($document, ngImpressUtils) {
+    // First we set up the viewport for mobile devices.
+    // For some reason iPad goes nuts when it is not done properly.
+    var meta = ngImpressUtils.$("meta[name='viewport']") || $document[0].createElement("meta");
+    meta.content = "width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no";
+    if (meta.parentNode !== $document[0].head) {
+      meta.name = "viewport";
+      $document[0].head.appendChild(meta);
+    }
+  });
 
   ngImpressApi.factory('impress', function ($timeout, ngImpressUtils, $document) {
 
@@ -121,8 +132,8 @@
           triggerEvent(step, "impress:stepenter");
           lastEntered = step;
         }
-      }
-        ;
+      };
+
       // `onStepLeave` is called whenever the step element is left
       // but the event is triggered only if the step is the same as
       // last entered step.
@@ -140,13 +151,15 @@
           goto(0);
         }
       };
-      var updateStepTimeout;
+
       var updateStep = function (step) {
+        
         css(step.el, {
           position: "absolute",
           transform: "translate(-50%,-50%)" + translate(step.translate) + rotate(step.rotate) + scale(step.scale),
           transformStyle: "preserve-3d"
         });
+
         if (activeStep === step.el) {
           throttle(function () {
             goto(step.el);
@@ -159,14 +172,6 @@
         if (initialized) {
           return;
         }
-        // First we set up the viewport for mobile devices.
-        // For some reason iPad goes nuts when it is not done properly.
-        var meta = $("meta[name='viewport']") || document.createElement("meta");
-        meta.content = "width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no";
-        if (meta.parentNode !== document.head) {
-          meta.name = "viewport";
-          document.head.appendChild(meta);
-        }
         // Initialize configuration object
         var rootData = root.dataset;
         config = {
@@ -178,12 +183,7 @@
           transitionDuration: toNumber(rootData.transitionDuration, defaults.transitionDuration)
         };
         windowScale = computeWindowScale(config);
-        // Wrap steps with "canvas" element
-        //       arrayify(root.childNodes).forEach(function (el) {
-        //         canvas.appendChild(el);
-        //       });
-        //       root.appendChild(canvas);
-        // Set initial styles
+
         document.documentElement.style.height = "100%";
         css(body, {
           height: "100%",
@@ -202,12 +202,10 @@
           transform: perspective(config.perspective / windowScale) + scale(windowScale)
         });
         css(canvas, rootStyles);
+        
         body.classList.remove("impress-disabled");
         body.classList.add("impress-enabled");
-        //       // Get and init steps
-        //       steps = $$(".step", canvas);
-        //       steps.forEach(initStep);
-        // Set a default initial state of the canvas
+        
         currentState = {
           translate: {
             x: 0,
@@ -221,10 +219,12 @@
           },
           scale: 1
         };
+
         initialized = true;
         triggerEvent(root, "impress:init", {
           api: roots["impress-root-" + rootId]
         });
+        
       }
         ;
       // `getStep` is a helper function that returns a step element defined by parameter.

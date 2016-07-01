@@ -23,6 +23,25 @@ app.controller('MyController', function ($scope, $interval, ImpressStep) {
     }));
   }
 
+
+  this.addStep = function () {
+    console.log('ddd');
+    self.steps.push(new ImpressStep({
+      caption: 'step ' + count,
+      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti explicabo reiciendis non quibusdam praesentium incidunt, voluptas pariatur sed officiis, tempore sint id ipsam molestias, earum voluptate blanditiis dolor, inventore sunt.',
+      translate: {
+        x: self.steps.length * 910, y: 0, z: 0
+      },
+      rotate: {
+        x: 0, y: 0, z: 0
+      },
+      scale: 1
+    }));
+  };
+
+  // self.steps.sort((a, b) => b.order - a.order);
+  // self.steps.forEach((x) => console.log(x.caption));
+
   this.rotate = function (step) {
     step.rotate.x += 25;
     step.rotate.y += 15;

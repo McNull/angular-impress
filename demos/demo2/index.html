@@ -22,6 +22,8 @@
 
 <body ng-controller="MyController as vm">
 
+  <button ng-click="vm.addStep()">Add</button>
+
   <impress>
 
     <impress-step class="slide" ng-repeat="step in vm.steps" step="step">
