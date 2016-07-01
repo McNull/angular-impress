@@ -287,7 +287,6 @@
         if (steps.length === 1) {
           goto(0);
         }
-        sortSteps();
       };
       var updateStepTimeout;
       var updateStep = function (step) {
@@ -302,15 +301,7 @@
           }, 100)();
         }
       };
-      
-      var sortSteps = function() {
-        steps.sort(function(a, b) {
-          return stepsData["impress-" + a.id].order - stepsData["impress-" + b.id].order;
-        });
-
-        console.log(steps);
-      };
-
+    
       // `init` API function that initializes (and runs) the presentation.
       var init = function () {
         if (initialized) {
@@ -596,8 +587,7 @@
         next: next,
         prev: prev,
         addStep: addStep,
-        updateStep: updateStep,
-        sortSteps: sortSteps
+        updateStep: updateStep
       });
     }
       ;

@@ -209,7 +209,9 @@ a:focus {
 .slide {
     display: block;
     width: 900px;
-    height: 700px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /*height: 700px;*/
     padding: 40px 60px;
     background-color: white;
     border: 1px solid rgba(0, 0, 0, .3);

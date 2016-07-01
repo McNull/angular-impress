@@ -48,13 +48,6 @@
         $scope.$watchGroup(['step.translate.x', 'step.translate.y', 'step.translate.z', 'step.rotate.x', 'step.rotate.y', 'step.rotate.z', 'step.scale'], function () {
           impress.updateStep(step);
         });
-
-        $scope.$watch('step.order', function(x,y) {
-          if(x!==y) {
-            console.log(arguments);
-            impress.sortSteps();
-          }
-        });
       }
     };
   });

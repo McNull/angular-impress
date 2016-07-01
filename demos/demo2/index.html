@@ -27,6 +27,7 @@
     <impress-step class="slide" ng-repeat="step in vm.steps" step="step">
       <h1>{{ step.caption }}</h1>
       <p>{{ step.text }}</p>
+      <pre><code>{{ step | json }}</code></pre>
       <button ng-click="vm.rotate(step)">Click</button>
     </impress-step>
   </impress>

@@ -24,9 +24,9 @@ app.controller('MyController', function ($scope, $interval, ImpressStep) {
   }
 
   this.rotate = function (step) {
-    step.transform.rotate.x += 25;
-    step.transform.rotate.y += 15;
-    step.transform.rotate.z += 10;
+    step.rotate.x += 25;
+    step.rotate.y += 15;
+    step.rotate.z += 10;
   };
 
   // $interval(function() {
