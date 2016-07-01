@@ -85,6 +85,7 @@
           y: toNumber(data.rotateY),
           z: toNumber(data.rotateZ || data.rotate)
         },
+        scale: toNumber(data.scale, 1),
         el: el
       });
     };

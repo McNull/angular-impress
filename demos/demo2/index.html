@@ -6,39 +6,94 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=1024" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <title>impress.js | presentation tool based on the power of CSS3 transforms and transitions in modern browsers | by Bartek Szopka
-    @bartaz
-  </title>
-
-  <meta name="description" content="impress.js is a presentation tool based on the power of CSS3 transforms and transitions in modern browsers and inspired by the idea behind prezi.com."
-  />
-  <meta name="author" content="Bartek Szopka" />
-
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic"
-    rel="stylesheet" />
-
+  <title>Demo 2</title>
+  <link href="../../bower_components/bootstrap-css/css/bootstrap.min.css" rel="stylesheet" />
   <link href="style.css" rel="stylesheet" />
 </head>
 
 <body ng-controller="MyController as vm">
 
-  <button ng-click="vm.addStep()">Add</button>
+  <div class="jumbotron">
+    <div class="container">
+      <h1>angular-impress</h1>
+      <p>
+        Add slides ...
+      </p>
 
-  <impress>
+      <div class="btn-toolbar">
+        <button class="btn btn-default" ng-click="vm.impress.prev()">Previous</button>
+        <button class="btn btn-default" ng-click="vm.impress.next()">Next</button>
+        <button class="btn btn-default" ng-click="vm.addStep()">Add</button>
+      </div>
+      
+      
+      
+
+  
+    </div>
+
+  </div>
+
+  <impress id="myImpress">
+
 
     <impress-step class="slide" ng-repeat="step in vm.steps" step="step">
       <h1>{{ step.caption }}</h1>
-      <p>{{ step.text }}</p>
-      <pre><code>{{ step | json }}</code></pre>
-      <button ng-click="vm.rotate(step)">Click</button>
+
+      <form class="form-horizontal" novalidate>
+
+        <div class="form-group">
+          <label class="col-xs-2 control-label">Translate</label>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.translate.x">
+          </div>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.translate.y">
+          </div>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.translate.z">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-xs-2 control-label">Rotate</label>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.rotate.x">
+          </div>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.rotate.y">
+          </div>
+          <div class="col-xs-2">
+            <input required type="number" class="form-control input-sm" step="0.1" ng-model="step.rotate.z">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="col-xs-2 control-label">Scale</label>
+          <div class="col-xs-2">
+            <input required type="number" min="0.1" class="form-control input-sm" step="0.1" ng-model="step.scale">
+          </div>
+        </div>
+
+        <div class="form-group">
+           <div class="col-xs-offset-2 col-xs-10">
+             <button class="btn btn-primary" ng-click="vm.randomize(step)">Randomize</button>
+           </div>
+        </div>
+      </form>
+      <br>
+
+      
     </impress-step>
   </impress>
 
   <script src="../../bower_components/angular/angular.js"></script>
-  <script src="../../src/angular-impress-api.js"></script>
+  <script src="../../dist/angular-impress.min.js"></script>
+
+  <!--<script src="../../src/angular-impress-api.js"></script>
   <script src="../../src/angular-impress-utils.js"></script>
   <script src="../../src/angular-impress-navigation.js"></script>
-  <script src="../../src/angular-impress.js"></script>
+  <script src="../../src/angular-impress.js"></script>-->
   <script src="script.js"></script>
 </body>
 

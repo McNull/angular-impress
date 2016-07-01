@@ -1,51 +1,46 @@
 var app = angular.module('myApp', ['ngImpress']);
 
-app.controller('MyController', function ($scope, $interval, ImpressStep) {
+app.controller('MyController', function ($scope, $interval, ImpressStep, impress, $timeout) {
 
   var self = this;
 
-  self.steps = [];
+  this.impress = impress('myImpress');
+  this.steps = [];
 
-  var count = 5;
-
-  while (count--) {
-    self.steps.push(new ImpressStep({
-      caption: 'step ' + count,
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti explicabo reiciendis non quibusdam praesentium incidunt, voluptas pariatur sed officiis, tempore sint id ipsam molestias, earum voluptate blanditiis dolor, inventore sunt.',
-      translate: {
-        x: count * 910, y: 0, z: 0
-      },
-      rotate: {
-        x: 0, y: 0, z: 0
-      },
-      scale: 1,
-      order: 5 - count
-    }));
-  }
-
-
+  
   this.addStep = function () {
-    console.log('ddd');
-    self.steps.push(new ImpressStep({
-      caption: 'step ' + count,
-      text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti explicabo reiciendis non quibusdam praesentium incidunt, voluptas pariatur sed officiis, tempore sint id ipsam molestias, earum voluptate blanditiis dolor, inventore sunt.',
+    
+    var step = new ImpressStep({
+      caption: 'step ' + self.steps.length,
       translate: {
-        x: self.steps.length * 910, y: 0, z: 0
-      },
-      rotate: {
-        x: 0, y: 0, z: 0
-      },
-      scale: 1
-    }));
+        x: self.steps.length * 910
+      }
+    });
+
+    self.steps.push(step);
+
+    $timeout(function() {
+      self.impress.goto(step);
+    });
   };
+
+  this.addStep();
 
   // self.steps.sort((a, b) => b.order - a.order);
   // self.steps.forEach((x) => console.log(x.caption));
 
-  this.rotate = function (step) {
-    step.rotate.x += 25;
-    step.rotate.y += 15;
-    step.rotate.z += 10;
+  this.randomize = function (step) {
+    step.rotate.x += -10.0 + Math.random() * 20.0;
+    step.rotate.y += -10.0 + Math.random() * 20.0;
+    step.rotate.z += -10.0 + Math.random() * 20.0;
+
+    step.translate.x += -10.0 + Math.random() * 20.0;
+    step.translate.y += -10.0 + Math.random() * 20.0;
+    step.translate.z += -10.0 + Math.random() * 20.0;
+
+    step.scale += -0.5 + Math.random() * 1.0;
+    step.scale = Math.max(0.1, step.scale);
+
   };
 
   // $interval(function() {
