@@ -98,14 +98,18 @@
       if (roots["impress-root-" + rootId]) {
         return roots["impress-root-" + rootId];
       }
-      // Data of all presentation steps
-      var stepsData = {};
-      // Element of currently active step
+      
+      var _steps = [];
       var activeStep = null;
+      // // Array of step elements
+      // var steps = [];
+      // // Data of all presentation steps
+      // var stepsData = {};
+      // // Element of currently active step
+      // var activeStep = null;
+
       // Current state (position, rotation and scale) of the presentation
       var currentState = null;
-      // Array of step elements
-      var steps = [];
       // Configuration options
       var config = null;
       // Scale factor of the browser window
@@ -129,7 +133,7 @@
       // last entered step.
       var onStepEnter = function (step) {
         if (lastEntered !== step) {
-          triggerEvent(step, "impress:stepenter");
+          triggerEvent(step.el, "impress:stepenter");
           lastEntered = step;
         }
       };
@@ -139,15 +143,16 @@
       // last entered step.
       var onStepLeave = function (step) {
         if (lastEntered === step) {
-          triggerEvent(step, "impress:stepleave");
+          triggerEvent(step.el, "impress:stepleave");
           lastEntered = null;
         }
       };
 
       var addStep = function (step) {
-        steps.push(step.el);
-        stepsData["impress-" + step.el.id] = step;
-        if (steps.length === 1) {
+        _steps.push(step);
+        // steps.push(step.el);
+        // stepsData["impress-" + step.el.id] = step;
+        if (_steps.length === 1) {
           goto(0);
         }
       };
@@ -231,25 +236,38 @@
       // If a number is given, step with index given by the number is returned, if a string
       // is given step element with such id is returned, if DOM element is given it is returned
       // if it is a correct step element.
-      var getStep = function (step) {
-        if (typeof step === "number") {
-          step = step < 0 ? steps[steps.length + step] : steps[step];
-        } else if (typeof step === "string") {
-          step = byId(step);
+      var getStep = function (idOrIdxOrDOM) {
+        var step;
+        if (typeof idOrIdxOrDOM === "number") {
+          step = idOrIdxOrDOM < 0 ? _steps[steps.length + idOrIdxOrDOM] : _steps[idOrIdxOrDOM];
+        } else if (typeof idOrIdxOrDOM === "string") {
+          step = _steps.find(function(s) { 
+            return s.el.id === idOrIdxOrDOM;
+          });
+        } else if(idOrIdxOrDOM instanceof HTMLElement) {
+          step = _steps.find(function(x) { return idOrIdxOrDOM === x.el; })
+        } else {
+          step = _steps.indexOf(idOrIdxOrDOM) !== -1 ? idOrIdxOrDOM : null;
         }
-        return (step && step.id && stepsData["impress-" + step.id]) ? step : null;
-      }
-        ;
+        return step;
+      };
+
       // Used to reset timeout for `impress:stepenter` event
       var stepEnterTimeout = null;
       // `goto` API function that moves to step given with `el` parameter
       // (by index, id or element), with a transition `duration` optionally
       // given as second parameter.
-      var goto = function (el, duration) {
-        if (!initialized || !(el = getStep(el))) {
+      var goto = function (stepOrIdOrIdx, duration) {
+
+        var step;
+
+        if (!initialized || !(step = getStep(stepOrIdOrIdx))) {
           // Presentation not initialized or given element is not a step
           return false;
         }
+
+        
+        
         // Sometimes it's possible to trigger focus on first link with some keyboard action.
         // Browser in such a case tries to scroll the page to make this element visible
         // (even that body overflow is set to hidden) and it breaks our careful positioning.
@@ -260,13 +278,13 @@
         // If you are reading this and know any better way to handle it, I'll be glad to hear
         // about it!
         window.scrollTo(0, 0);
-        var step = stepsData["impress-" + el.id];
+        
         if (activeStep) {
-          activeStep.classList.remove("active");
-          body.classList.remove("impress-on-" + activeStep.id);
+          activeStep.el.classList.remove("active");
+          body.classList.remove("impress-on-" + activeStep.el.id);
         }
-        el.classList.add("active");
-        body.classList.add("impress-on-" + el.id);
+        step.el.classList.add("active");
+        body.classList.add("impress-on-" + step.el.id);
         // Compute target state of the canvas based on given step
         var target = {
           rotate: {
@@ -292,12 +310,12 @@
         var delay = (duration / 2);
         // If the same step is re-selected, force computing window scaling,
         // because it is likely to be caused by window resize
-        if (el === activeStep) {
+        if (step === activeStep) {
           windowScale = computeWindowScale(config);
         }
         var targetScale = target.scale * windowScale;
         // Trigger leave of currently active element (if it's not the same step again)
-        if (activeStep && activeStep !== el) {
+        if (activeStep && activeStep !== step) {
           onStepLeave(activeStep);
         }
         // Now we alter transforms of `root` and `canvas` to trigger transitions.
@@ -336,7 +354,7 @@
         }
         // Store current state
         currentState = target;
-        activeStep = el;
+        activeStep = step;
         // And here is where we trigger `impress:stepenter` event.
         // We simply set up a timeout to fire it taking transition duration
         // (and possible delay) into account.
@@ -359,20 +377,20 @@
         stepEnterTimeout = window.setTimeout(function () {
           onStepEnter(activeStep);
         }, duration + delay);
-        return el;
+        return step;
       }
         ;
       // `prev` API function goes to previous step (in document order)
       var prev = function () {
-        var prev = steps.indexOf(activeStep) - 1;
-        prev = prev >= 0 ? steps[prev] : steps[steps.length - 1];
+        var prev = _steps.indexOf(activeStep) - 1;
+        prev = prev >= 0 ? _steps[prev] : _steps[steps.length - 1];
         return goto(prev);
       }
         ;
       // `next` API function goes to next step (in document order)
       var next = function () {
-        var next = steps.indexOf(activeStep) + 1;
-        next = next < steps.length ? steps[next] : steps[0];
+        var next = _steps.indexOf(activeStep) + 1;
+        next = next < _steps.length ? _steps[next] : _steps[0];
         return goto(next);
       }
         ;
@@ -404,33 +422,34 @@
           event.target.classList.add("past");
         }, false);
       }, false);
-      // Adding hash change support.
-      root.addEventListener("impress:init", function () {
-        // Last hash detected
-        var lastHash = "";
-        // `#/step-id` is used instead of `#step-id` to prevent default browser
-        // scrolling to element in hash.
-        //
-        // And it has to be set after animation finishes, because in Chrome it
-        // makes transtion laggy.
-        // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
-        root.addEventListener("impress:stepenter", function (event) {
-          window.location.hash = lastHash = "#/" + event.target.id;
-        }, false);
-        window.addEventListener("hashchange", function () {
-          // When the step is entered hash in the location is updated
-          // (just few lines above from here), so the hash change is
-          // triggered and we would call `goto` again on the same element.
-          //
-          // To avoid this we store last entered hash and compare.
-          if (window.location.hash !== lastHash) {
-            goto(getElementFromHash());
-          }
-        }, false);
-        //       START
-        //       by selecting step defined in url or first step of the presentation
-        //       goto(getElementFromHash() || steps[0], 0);
-      }, false);
+      // // Adding hash change support.
+      // root.addEventListener("impress:init", function () {
+      //   // Last hash detected
+      //   var lastHash = "";
+      //   // `#/step-id` is used instead of `#step-id` to prevent default browser
+      //   // scrolling to element in hash.
+      //   //
+      //   // And it has to be set after animation finishes, because in Chrome it
+      //   // makes transtion laggy.
+      //   // BUG: http://code.google.com/p/chromium/issues/detail?id=62820
+      //   root.addEventListener("impress:stepenter", function (event) {
+      //     window.location.hash = lastHash = "#/" + event.target.id;
+      //   }, false);
+      //   window.addEventListener("hashchange", function () {
+      //     // When the step is entered hash in the location is updated
+      //     // (just few lines above from here), so the hash change is
+      //     // triggered and we would call `goto` again on the same element.
+      //     //
+      //     // To avoid this we store last entered hash and compare.
+      //     if (window.location.hash !== lastHash) {
+      //       goto(getElementFromHash());
+      //     }
+      //   }, false);
+      //   //       START
+      //   //       by selecting step defined in url or first step of the presentation
+      //   //       goto(getElementFromHash() || steps[0], 0);
+      // }, false);
+      
       body.classList.add("impress-disabled");
       // Store and return API for given impress.js root element
       return (roots["impress-root-" + rootId] = {
