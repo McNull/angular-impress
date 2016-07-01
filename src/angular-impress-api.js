@@ -383,7 +383,7 @@
       // `prev` API function goes to previous step (in document order)
       var prev = function () {
         var prev = _steps.indexOf(activeStep) - 1;
-        prev = prev >= 0 ? _steps[prev] : _steps[steps.length - 1];
+        prev = prev >= 0 ? _steps[prev] : _steps[_steps.length - 1];
         return goto(prev);
       }
         ;
