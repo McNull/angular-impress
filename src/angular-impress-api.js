@@ -165,9 +165,9 @@
           transformStyle: "preserve-3d"
         });
 
-        if (activeStep === step.el) {
+        if (activeStep === step) {
           throttle(function () {
-            goto(step.el);
+            goto(step);
           }, 100)();
         }
       };
