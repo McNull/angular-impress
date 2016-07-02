@@ -278,7 +278,8 @@
         //
         // If you are reading this and know any better way to handle it, I'll be glad to hear
         // about it!
-        window.scrollTo(0, 0);
+        
+        // window.scrollTo(0, 0);
         
         if (activeStep) {
           activeStep.el.classList.remove("active");
