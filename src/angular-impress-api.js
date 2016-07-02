@@ -74,7 +74,7 @@
     var rotate = ngImpressUtils.rotate;
     var translate = ngImpressUtils.translate;
 
-    var body = $document[0].body;
+    // var body = $document[0].body;
     // var pfx = ngImpressUtils.pfx;
 
     // And that's where interesting things will start to happen.
@@ -115,9 +115,10 @@
       // Scale factor of the browser window
       var windowScale = null;
       // Root presentation elements
-      var root = byId(rootId);
+      var container = byId(rootId);
+      var root = container.children[0];
       var canvas = root.children[0];
-      // document.createElement("div");
+      
       var initialized = false;
       // STEP EVENTS
       //
@@ -189,9 +190,9 @@
         };
         windowScale = computeWindowScale(config);
 
-        document.documentElement.style.height = "100%";
-        css(body, {
-          height: "100%",
+        // document.documentElement.style.height = "100%";
+        css(container, {
+          // height: "100%",
           overflow: "hidden"
         });
         var rootStyles = {
@@ -208,8 +209,8 @@
         });
         css(canvas, rootStyles);
         
-        body.classList.remove("impress-disabled");
-        body.classList.add("impress-enabled");
+        container.classList.remove("impress-disabled");
+        container.classList.add("impress-enabled");
         
         currentState = {
           translate: {
@@ -281,10 +282,10 @@
         
         if (activeStep) {
           activeStep.el.classList.remove("active");
-          body.classList.remove("impress-on-" + activeStep.el.id);
+          container.classList.remove("impress-on-" + activeStep.el.id);
         }
         step.el.classList.add("active");
-        body.classList.add("impress-on-" + step.el.id);
+        container.classList.add("impress-on-" + step.el.id);
         // Compute target state of the canvas based on given step
         var target = {
           rotate: {
@@ -450,7 +451,7 @@
       //   //       goto(getElementFromHash() || steps[0], 0);
       // }, false);
       
-      body.classList.add("impress-disabled");
+      container.classList.add("impress-disabled");
       // Store and return API for given impress.js root element
       return (roots["impress-root-" + rootId] = {
         init: init,

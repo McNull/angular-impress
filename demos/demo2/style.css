@@ -36,3 +36,15 @@
     color: rgb(102, 102, 102);
     
 }
+
+/*.jumbotron {
+  z-index: 10000;
+}*/
+
+#myImpress {
+  border: 1px solid;
+  margin: 10px;
+  height: 400px;
+  background-color: #eee;
+}
+

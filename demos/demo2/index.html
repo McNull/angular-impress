@@ -8,6 +8,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <title>Demo 2</title>
   <link href="../../bower_components/bootstrap-css/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../../src/angular-impress.css">
   <link href="style.css" rel="stylesheet" />
 </head>
 
@@ -17,24 +18,22 @@
     <div class="container">
       <h1>angular-impress</h1>
       <p>
-        Add slides ...
+        Work in progress ...
       </p>
-
+      <p>
+        Github: <a target="_blank" href="https://github.com/McNull/angular-impress">https://github.com/McNull/angular-impress</a>
+      </p>
       <div class="btn-toolbar">
-        <button class="btn btn-default" ng-click="vm.impress.prev()">Previous</button>
-        <button class="btn btn-default" ng-click="vm.impress.next()">Next</button>
-        <button class="btn btn-default" ng-click="vm.addStep()">Add</button>
+        <button class="btn btn-default" ng-click="vm.impress.prev()"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
+        <button class="btn btn-default" ng-click="vm.impress.next()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
+        <button class="btn btn-default" ng-click="vm.addStep()"><span class="glyphicon glyphicon-plus"></span> Add Step</button>
       </div>
-      
-      
-      
-
   
     </div>
 
   </div>
 
-  <impress id="myImpress">
+  <impress id="myImpress" class="impress-container">
 
 
     <impress-step class="slide" ng-repeat="step in vm.steps" step="step">
@@ -88,12 +87,12 @@
   </impress>
 
   <script src="../../bower_components/angular/angular.js"></script>
-  <script src="../../dist/angular-impress.min.js"></script>
+  <!--<script src="../../dist/angular-impress.min.js"></script>-->
 
-  <!--<script src="../../src/angular-impress-api.js"></script>
+  <script src="../../src/angular-impress-api.js"></script>
   <script src="../../src/angular-impress-utils.js"></script>
   <script src="../../src/angular-impress-navigation.js"></script>
-  <script src="../../src/angular-impress.js"></script>-->
+  <script src="../../src/angular-impress.js"></script>
   <script src="script.js"></script>
 </body>
 

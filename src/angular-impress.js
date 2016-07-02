@@ -9,19 +9,25 @@
       controller: angular.noop,
       link: {
         pre: function preLink($scope, $element, $attrs) {
+
+          $element.addClass('impress');
+
           var id = $element[0].id;
           if (!id) {
             id = $element[0].id = 'ngImpress' + idCounter++;
           }
+
           var instance = impress(id);
+
           $element.data('impress', instance);
+
           instance.init();
-          $scope.$impress = instance;
+          
         },
         post: function ($scope, $element, $attrs) { }
       },
       transclude: true,
-      template: '<div ng-transclude></div>'
+      template: '<div class="impress-root"><div class="impress-canvas" ng-transclude></div></div>'
     };
   });
   ///////////////////////////////////////////////////
