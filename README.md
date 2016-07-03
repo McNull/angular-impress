@@ -44,17 +44,16 @@ By default the viewport will assume a fullscreen presentation. If you wish to co
 ### impress-step
 The `impress-step` directive specifies a step within the presentation. To specify its 3D transformations use the following attributes:
 
-|attribute       |meaning        |
-|:-              |:-             |
-|`data-x`        |x-axis position|
-|`data-y`        |y-axis position|
-|`data-z`        |z-axis position|
-|`data-rotate-x` |x-axis rotation|
-|`data-rotate-y` |y-axis rotation|
-|`data-rotate-z` |z-axis rotation|
-|`data-rotate`   |z-axis rotation|
-|`data-scale`    |scale factor   |
-
+| attribute       | meaning         |
+| --------------- | --------------- |
+| `data-x`        | x-axis position |
+| `data-y`        | y-axis position |
+| `data-z`        | z-axis position |
+| `data-rotate-x` | x-axis rotation |
+| `data-rotate-y` | y-axis rotation |
+| `data-rotate-z` | z-axis rotation |
+| `data-rotate`   | z-axis rotation |
+| `data-scale`    | scale factor    |
 
 ```
 <impress-step data-x="-1000" data-y="-1500">
