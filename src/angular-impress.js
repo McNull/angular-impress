@@ -54,6 +54,10 @@
         $scope.$watchGroup(['step.translate.x', 'step.translate.y', 'step.translate.z', 'step.rotate.x', 'step.rotate.y', 'step.rotate.z', 'step.scale'], function () {
           impress.updateStep(step);
         });
+
+        $scope.$on('$destroy', function() {
+          impress.removeStep(step);
+        });
       }
     };
   });

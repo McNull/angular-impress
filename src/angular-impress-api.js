@@ -173,6 +173,17 @@
         }
       };
 
+      var removeStep = function(step) {
+        var idx = _steps.indexOf(step);
+
+        if(idx != -1) {
+          if(activeStep === step) {
+            prev();
+          }
+          _steps.splice(idx, 1);
+        }
+      };
+
       // `init` API function that initializes (and runs) the presentation.
       var init = function () {
         if (initialized) {
@@ -460,6 +471,7 @@
         next: next,
         prev: prev,
         addStep: addStep,
+        removeStep: removeStep,
         updateStep: updateStep,
         activeStep: function() { return activeStep; },
         steps: _steps

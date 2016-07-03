@@ -27,6 +27,8 @@
         <button class="btn btn-default" ng-click="vm.impress.prev()"><span class="glyphicon glyphicon-arrow-left"></span> Previous</button>
         <button class="btn btn-default" ng-click="vm.impress.next()"><span class="glyphicon glyphicon-arrow-right"></span> Next</button>
         <button class="btn btn-default" ng-click="vm.addStep()"><span class="glyphicon glyphicon-plus"></span> Add Step</button>
+        <button class="btn btn-primary" ng-click="vm.randomizeAll()"><span class=""></span> Randomize All</button>
+        <button class="btn btn-danger" ng-click="vm.removeAll()"><span class=""></span> Remove All</button>
       </div>
   
     </div>
@@ -37,10 +39,15 @@
 
 
     <impress-step class="slide" ng-repeat="step in vm.steps" step="step">
-      <h1>{{ step.caption }}</h1>
+      <!--<h1 class="text-center">{{ step.caption }}</h1>-->
+
+      <button class="btn btn-sm btn-close btn-danger" ng-click="vm.removeStep(step)">X</button>
 
       <form class="form-horizontal" novalidate>
 
+        
+        <legend>{{ step.caption }}</legend>
+        
         <div class="form-group">
           <label class="col-xs-2 control-label">Translate</label>
           <div class="col-xs-2">
