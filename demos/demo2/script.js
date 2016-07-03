@@ -4,7 +4,7 @@ app.controller('MyController', function ($scope, $interval, ImpressStep, impress
 
   var self = this;
 
-  this.impress = impress('myImpress');
+  this.impress = impress('my-impress');
   this.steps = [];
   
   this.addStep = function () {

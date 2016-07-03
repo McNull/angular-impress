@@ -116,6 +116,11 @@
       var windowScale = null;
       // Root presentation elements
       var container = byId(rootId);
+
+      if(!container) {
+        throw new Error('Impress id not found: ' + rootId);
+      }
+      
       var root = container.children[0];
       var canvas = root.children[0];
       
