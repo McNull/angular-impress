@@ -49,12 +49,20 @@
           id = $element[0].id = 'ngImpressView' + idCounter++;
         }
         var step = $scope.step = $scope.step || ImpressStep.fromElement($element[0]);
+
         step.el = $element[0];
+
         impress.addStep(step);
+
         $scope.$watchGroup(['step.translate.x', 'step.translate.y', 'step.translate.z', 'step.rotate.x', 'step.rotate.y', 'step.rotate.z', 'step.scale'], function () {
           impress.updateStep(step);
         });
 
+        $scope.$watch('step.order', function(x,y) {
+          if(x !== y) {
+            impress.updateStepOrder(step);
+          }
+        });
         $scope.$on('$destroy', function() {
           impress.removeStep(step);
         });
@@ -96,6 +104,7 @@
           z: toNumber(data.rotateZ || data.rotate)
         },
         scale: toNumber(data.scale, 1),
+        order: 0,
         el: el
       });
     };

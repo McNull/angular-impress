@@ -98,7 +98,7 @@
       if (roots["impress-root-" + rootId]) {
         return roots["impress-root-" + rootId];
       }
-      
+
       var _steps = [];
       var activeStep = null;
       // // Array of step elements
@@ -117,13 +117,13 @@
       // Root presentation elements
       var container = byId(rootId);
 
-      if(!container) {
+      if (!container) {
         throw new Error('Impress id not found: ' + rootId);
       }
-      
+
       var root = container.children[0];
       var canvas = root.children[0];
-      
+
       var initialized = false;
       // STEP EVENTS
       //
@@ -154,17 +154,43 @@
         }
       };
 
+      function _getStepOrderIndex(step) {
+      
+        step.order = step.order || 0;
+
+        var idx = _steps.length;
+
+        for (var i = 0; i < _steps.length; i++) {
+          if (step.order < _steps[i].order) {
+            idx = i;
+            break;
+          }
+        }
+
+        return idx;
+      }
+
+      var updateStepOrder = function(step) {
+        var idx = _steps.indexOf(step);
+
+        if(idx !== -1) {
+          _steps.splice(idx, 1);
+          addStep(step);
+        }
+      };
+
       var addStep = function (step) {
-        _steps.push(step);
-        // steps.push(step.el);
-        // stepsData["impress-" + step.el.id] = step;
+
+        var idx = _getStepOrderIndex(step); 
+        _steps.splice(idx, 0, step);
+        
         if (_steps.length === 1) {
           goto(0);
         }
       };
 
       var updateStep = function (step) {
-        
+
         css(step.el, {
           position: "absolute",
           transform: "translate(-50%,-50%)" + translate(step.translate) + rotate(step.rotate) + scale(step.scale),
@@ -178,11 +204,11 @@
         }
       };
 
-      var removeStep = function(step) {
+      var removeStep = function (step) {
         var idx = _steps.indexOf(step);
 
-        if(idx != -1) {
-          if(activeStep === step) {
+        if (idx != -1) {
+          if (activeStep === step) {
             prev();
           }
           _steps.splice(idx, 1);
@@ -224,10 +250,10 @@
           transform: perspective(config.perspective / windowScale) + scale(windowScale)
         });
         css(canvas, rootStyles);
-        
+
         container.classList.remove("impress-disabled");
         container.classList.add("impress-enabled");
-        
+
         currentState = {
           translate: {
             x: 0,
@@ -246,7 +272,7 @@
         triggerEvent(root, "impress:init", {
           api: roots["impress-root-" + rootId]
         });
-        
+
       }
         ;
       // `getStep` is a helper function that returns a step element defined by parameter.
@@ -258,11 +284,11 @@
         if (typeof idOrIdxOrDOM === "number") {
           step = idOrIdxOrDOM < 0 ? _steps[steps.length + idOrIdxOrDOM] : _steps[idOrIdxOrDOM];
         } else if (typeof idOrIdxOrDOM === "string") {
-          step = _steps.find(function(s) { 
+          step = _steps.find(function (s) {
             return s.el.id === idOrIdxOrDOM;
           });
-        } else if(idOrIdxOrDOM instanceof HTMLElement) {
-          step = _steps.find(function(x) { return idOrIdxOrDOM === x.el; })
+        } else if (idOrIdxOrDOM instanceof HTMLElement) {
+          step = _steps.find(function (x) { return idOrIdxOrDOM === x.el; })
         } else {
           step = _steps.indexOf(idOrIdxOrDOM) !== -1 ? idOrIdxOrDOM : null;
         }
@@ -283,8 +309,8 @@
           return false;
         }
 
-        
-        
+
+
         // Sometimes it's possible to trigger focus on first link with some keyboard action.
         // Browser in such a case tries to scroll the page to make this element visible
         // (even that body overflow is set to hidden) and it breaks our careful positioning.
@@ -294,9 +320,9 @@
         //
         // If you are reading this and know any better way to handle it, I'll be glad to hear
         // about it!
-        
+
         // window.scrollTo(0, 0);
-        
+
         if (activeStep) {
           activeStep.el.classList.remove("active");
           container.classList.remove("impress-on-" + activeStep.el.id);
@@ -467,7 +493,7 @@
       //   //       by selecting step defined in url or first step of the presentation
       //   //       goto(getElementFromHash() || steps[0], 0);
       // }, false);
-      
+
       container.classList.add("impress-disabled");
       // Store and return API for given impress.js root element
       return (roots["impress-root-" + rootId] = {
@@ -475,10 +501,11 @@
         goto: goto,
         next: next,
         prev: prev,
+        updateStepOrder: updateStepOrder,
         addStep: addStep,
         removeStep: removeStep,
         updateStep: updateStep,
-        activeStep: function() { return activeStep; },
+        activeStep: function () { return activeStep; },
         steps: _steps
       });
     }
